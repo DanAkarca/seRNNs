@@ -1,0 +1,39 @@
+%% explore activity recordings
+
+%% load activity recordings
+network = [0:100];
+epochset = string({...
+    '01','02','03','04','05','06','07','08','09','10'});
+timewindows = [1:5;6:10; 11:15; 16:20; 21:25; 26:30; 31:35; 36:40; 41:45; 46:50];
+% initialise
+pre_act = {}; post_act = {};
+% loop
+for net = 1:length(network);
+    for epoch = 1:length(epochset);
+        str = sprintf('SN_%g_%s_recording.mat',network(net),epochset(epoch));
+        load(str);
+        % form an array
+        unitarray = cell2mat(recorded_data(2:end,2));
+        for unit = 1:100;
+            % get unit indices
+            ind = unitarray==unit;
+            % get index +1 because we index back
+            numind = find(ind)+1;
+            % initalise an array
+            pre_act_unit = zeros(sum(ind),50);
+            post_act_unit = zeros(sum(ind),50);
+            % loop over each unit over trials
+            for trial = 1:sum(ind);
+                pre_act_unit(trial,:) = cell2mat(recorded_data(numind(trial),7));
+                post_act_unit(trial,:) = cell2mat(recorded_data(numind(trial),8));
+            end
+            % keep 
+            pre_act{net}{epoch}{unit} = pre_act_unit;
+            post_act{net}{epoch}{unit} = post_act_unit;
+            % display
+            disp(sprintf('network %g, epoch %g, unit %g complete',net,epoch,unit));
+        end
+    end
+end
+%% compute neuronal activations
+%% compute functional connectivity
