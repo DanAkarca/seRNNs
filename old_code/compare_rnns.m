@@ -1,5 +1,6 @@
 %% compare topology of network 
 % written dr danyal akarca
+
 %% set pre-requisites and paths
 % clear the workspace and command window
 clear; clc;
